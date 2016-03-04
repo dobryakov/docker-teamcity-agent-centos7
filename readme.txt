@@ -13,11 +13,16 @@ sudo docker ps
 # in real environment use https://github.com/dobryakov/docker-compose-teamcity
 
 # put Dockerfile inside teamcity-agent work dir:
+# (in real app you can copy Gemfile and Gemfile.lock first to create first layer with gems)
 FROM phusion/passenger-full:0.9.18
-ADD . /home/app/webapp
+RUN mkdir -p /home/app/webapp
 RUN chown -R app:app /home/app/webapp
 WORKDIR /home/app/webapp
+COPY . /home/app/webapp
+RUN chown -R app:app /home/app/webapp
+RUN bundle install --jobs 20 --retry 5
 CMD ["/sbin/my_init"]
+
 
 # setup teamcity server and agent, add build steps:
 sudo docker build --rm -t local/ttt .
