@@ -23,7 +23,6 @@ RUN chown -R app:app /home/app/webapp
 RUN bundle install --jobs 20 --retry 5
 CMD ["/sbin/my_init"]
 
-
 # setup teamcity server and agent, add build steps:
 sudo docker build --rm -t local/ttt .
 sudo docker run -d -t --name teamcity-test -i local/ttt
