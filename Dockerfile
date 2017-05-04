@@ -9,7 +9,7 @@ rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
 rm -f /lib/systemd/system/basic.target.wants/*;\
 rm -f /lib/systemd/system/anaconda.target.wants/*;
 RUN adduser teamcity
-RUN yum install -y sudo java-1.8.0-openjdk unzip wget java-1.8.0-openjdk-devel which openssh-clients nano git
+RUN yum install -y sudo java-1.8.0-openjdk unzip wget java-1.8.0-openjdk-devel which openssh-clients nano git libtool-ltdl
 RUN echo "teamcity ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 VOLUME [ "/sys/fs/cgroup" ]
 ADD setup-agent.sh /setup-agent.sh
@@ -19,5 +19,9 @@ RUN mkdir -p /home/teamcity/.ssh
 ADD .ssh /home/teamcity/.ssh
 RUN chmod 700 /home/teamcity/.ssh && chmod 600 /home/teamcity/.ssh/* && chown -R teamcity:teamcity /home/teamcity
 # and from inside your teamcity-agent container you will be able to use: ssh -o StrictHostKeyChecking=no user@your-docker-host
+
+# setup docker-compose
+RUN curl -L https://github.com/docker/compose/releases/download/1.6.2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+RUN chmod +x /usr/local/bin/docker-compose
 
 CMD ["/usr/sbin/init"]
